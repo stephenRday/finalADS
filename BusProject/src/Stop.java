@@ -1,5 +1,6 @@
+import java.util.ArrayList;
 
-public class stops {
+public class Stop {
 	// stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station
 	
 	int stop_id;
@@ -10,7 +11,9 @@ public class stops {
 	double stop_lon;
 	String zone_id; 
 	
-	public stops(String input) {
+	ArrayList<int[]> connectedStops = new ArrayList<int[]>();
+	
+	public Stop(String input) {
 		
 		String[] stopsArray = input.split(",");
 		this.stop_id = Integer.parseInt(stopsArray[0]);
@@ -64,10 +67,46 @@ public class stops {
 		return zone_id;
 	}
 
+	
+	public String getFixedStopName()
+	{
+		String newName = stop_name;
+		if (newName.startsWith("wb ")) newName = (newName.substring(3,newName.length()) + " wb");
+		
+		
+		return newName;
+				
+	}
+	
 	@Override
 	public String toString() {
 		return "stops [stop_id=" + stop_id + ", stop_code=" + stop_code + ", stop_name=" + stop_name + ", stop_desc="
 				+ stop_desc + ", stop_lat=" + stop_lat + ", stop_lon=" + stop_lon + ", zone_id=" + zone_id + "]";
 	}
 	
+	public boolean addConnectedStop(int id, int cost) {
+		
+		if(checkIfConnectedStop(id) == true) return false;
+		int[] newStop = new int[2];
+		newStop[0] = id;
+		newStop[1] = cost;
+		connectedStops.add(newStop);
+		
+		return true;
+	}
+	
+	public boolean checkIfConnectedStop(int id) {
+		
+		for(int i=0; i < connectedStops.size(); i++) 
+		{
+			if(connectedStops.get(i)[0] == id) return true;
+		}
+		
+		return false;
+	}
+	
+	public ArrayList<int[]> getConnectedStops() {
+		
+		return connectedStops;
+	}
 }

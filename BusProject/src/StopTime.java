@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class stopTimes {
+public class StopTime {
 	//trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled
 	
 	int trip_id;
@@ -18,7 +18,7 @@ public class stopTimes {
 	int drop_off_type;
 	int shape_dist_traveled;
 	
-public stopTimes(String input) {
+public StopTime(String input) {
 		
 		String[] stopTimesArray = input.split(",");
 		this.trip_id = Integer.parseInt(stopTimesArray[0]);	

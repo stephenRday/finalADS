@@ -1,5 +1,5 @@
 
-public class transfers {
+public class Transfer {
 	
 	//from_stop_id,to_stop_id,transfer_type,min_transfer_time
 	
@@ -8,7 +8,7 @@ public class transfers {
 	int transfer_type;
 	int min_transfer_time;
 	
-	public transfers(String input) {
+	public Transfer(String input) {
 		
 		String[] transfersArray = input.split(",");
 		this.from_stop_id = Integer.parseInt(transfersArray[0]);
