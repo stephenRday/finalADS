@@ -33,7 +33,7 @@ public class BusProject {
 			exit = true;
 		}	
 		
-		System.out.println("The max number of connected stops is " + countMaxConnections());
+		//System.out.println("The max number of connected stops is " + countMaxConnections());
 		
 		if(processTransfers() == false)
 		{
@@ -41,8 +41,8 @@ public class BusProject {
 			exit = true;
 		}	
 		
-		System.out.println("The max number of connected stops is " + countMaxConnections());	
-		showNames(2);
+		//System.out.println("The max number of connected stops (incl transfers) is " + countMaxConnections());	
+		//showNames(2);
 
 		
 		// Read in the TST
@@ -68,7 +68,7 @@ public class BusProject {
 			try {
 				int option = input.nextInt();
 				
-				System.out.println("Option selected is " + option);
+				System.out.println("\nOption selected is " + option);
 				
 				if (option == 1)
 				{
@@ -91,21 +91,21 @@ public class BusProject {
 					while (!startingText.equals("exit"))
 					{
 					
-						System.out.print("Enter the text to search for at the start of the bus stop name (or exit to return): ");
+						System.out.print("Enter the text to search for at the start of the bus stop name (or 'exit' to return): ");
 						startingText = input.nextLine();
 						
 						if (startingText.length() == 0)
 						{
-							System.out.println("Please enter a starting string to search for or type exit to return to the main menu");
+							System.out.println("Please enter a starting string to search for or type 'exit' to return to the main menu");
 							
 						}
 						else if (startingText.equals("exit"))
 						{
-							System.out.println("Returning to main menu.");
+							System.out.println("Returning to main menu.\n");
 						}
 						else
 						{
-							System.out.println("Trying to find stops which start with " + startingText);
+							System.out.println("\nTrying to find stops which start with " + startingText);
 						
 							// test the TST etc
 							ArrayList<String> matchingStopList = TST.getMatchingStops(startingText);
@@ -126,14 +126,37 @@ public class BusProject {
 				}
 				else if (option == 3)
 				{
-					// ask the user for a time
-					// check if it is valid and not over 23:59:59
-					// tell user searching for trips with particular time
-					// restart the found trips arraylist as empty
-					ArrayList<StopTime> foundTrips = new ArrayList<StopTime>();
-					// call getmatching
-					// call sort
-					// call print
+					if (input.hasNextLine()) input.nextLine();
+					
+					String timeToCheck = "";
+					
+					while (!timeToCheck.equals("exit"))
+					{
+						// ask the user for a time
+						System.out.print("\nPlease enter a time in the format hh:mm:ss (or 'exit' to exit)\n"
+								+ "Enter your input here:");
+						timeToCheck = input.nextLine();
+						
+						if (timeToCheck.equals("exit"))
+						{
+							System.out.println("Returning to main menu.\n");
+						}
+						else if(isValidTime(timeToCheck)==false)
+						{
+							System.out.println("Please enter a valid time string (hh:mm:ss) to search for or type exit to return to the main menu");
+							
+						}
+						else
+						{
+							//System.out.println(timeToCheck + " is valid");
+							System.out.println("\nSearching for trips with arrival time " + timeToCheck);								
+							foundTrips = new ArrayList<StopTime>(); // restart the found trips arraylist as empty
+							getMatchingTrips(timeToCheck);// call getMatchingTrips
+							printMatchingTrips();// call printMatchingTrips	
+
+						}						
+					
+					}
 					
 				}
 				else if (option == 4)
@@ -141,6 +164,7 @@ public class BusProject {
 					exit = true;
 					System.out.println("The program is now exiting.");
 				}
+				else System.out.println("Please enter a valid input.\n");
 			}
 			catch (InputMismatchException e) {
 				System.out.println("Please enter a valid input.\n");
@@ -149,8 +173,49 @@ public class BusProject {
 			//else System.out.println("Please enter a valid input.");
 		}
 		
-		System.out.println("Finished");
+		//System.out.println("Finished");
 	}
+	
+	public static boolean isValidTime(String timeToCheck)
+	{
+		if (timeToCheck.length()!=8) return false;
+		
+		String tempTimetoCheck = timeToCheck;
+		
+		try {
+		String h = timeToCheck.substring(0,1);
+		if(h.equals(" "))
+		{
+			String secondH = timeToCheck.substring(1,2);
+			int secondHour = Integer.parseInt(secondH);
+			if(secondHour > 9 || secondHour < 0) return false;
+		}
+		else
+		{
+			String hH = timeToCheck.substring(0,2);						
+			int hourHour = Integer.parseInt(hH);						
+			if(hourHour > 23 || hourHour < 0) return false;
+		}
+
+		String mM = timeToCheck.substring(3,5);
+		int minuteMinute = Integer.parseInt(mM);						
+		if(minuteMinute > 59 || minuteMinute < 0) return false;
+		
+		String sS = timeToCheck.substring(6,8);							
+		int secondSecond = Integer.parseInt(sS);						
+		if(secondSecond > 59 || secondSecond < 0) return false;
+		
+		if(!(timeToCheck.charAt(2) == ':')) return false;
+		if(!(timeToCheck.charAt(5) == ':')) return false;
+		
+		return true;
+		}
+		catch (Exception e) {
+			return false; // if any problems parsing the ints will throw exception
+		}
+		
+	}
+	
 	
 	public static boolean ReadInFiles() {
 		
@@ -234,7 +299,7 @@ public class BusProject {
 					
 				line = br.readLine();
 			}
-			System.out.println("I have read in and created " + stopTimes.size() + " stop times");
+			System.out.println("I have read in and created " + stopTimes.size() + " stop times\n");
 			return true;
 			
 			
@@ -286,7 +351,7 @@ public class BusProject {
 			prevStopId = curStopId;
 			prevTripId = curTripId;
 		}
-		System.out.println("I have added " + countConnectionsAdded + " connections from Stop Times.");
+		//System.out.println("I have added " + countConnectionsAdded + " connections from Stop Times.");
 		
 		return true;
 		
@@ -335,7 +400,7 @@ public class BusProject {
 					if(stopFound == false) System.out.println("Stop number " + fromStopId + " was not found.");
 
 			}
-			System.out.println("I have added " + countConnectionsAdded + " connections from transfers.");
+			//System.out.println("I have added " + countConnectionsAdded + " connections from transfers.");
 			
 			return true;
 			
@@ -355,12 +420,11 @@ public class BusProject {
 				TST.insert(stops.get(i).getFixedStopName());
 			}	
 			
-			System.out.println("Added " + TST.countStopsNamed() + " to the tree");
+			//System.out.println("Added " + TST.countStopsNamed() + " to the tree");
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error on populating Tree\n");
-//			e.printStackTrace();
+			//System.out.println("Error on populating Tree\n");
 			return false;
 		}
 		return true;
@@ -376,6 +440,8 @@ public class BusProject {
 			int current = 0;
 			current = stops.get(i).getConnectedStops().size();
 			if(current > countMax) countMax = current;
+			
+			if(current == 0) System.out.println(stops.get(i).getStop_code());
 		}
 		
 		return countMax;
@@ -527,7 +593,7 @@ public class BusProject {
 			if (routeTable.get(i)[0]== toStopId)
 			{
 				foundRoute = true;
-				System.out.println("Wey hey.  We found a route and the cost is " + routeTable.get(i)[1] + " and the last stop before was " + routeTable.get(i)[2]+ "\n\n");
+				System.out.println("Yay.  We found a route and the cost is " + routeTable.get(i)[1] + "\n\n");
 				 boolean finishedRoute = false;
 				 int thisStop = toStopId;
 				 while (finishedRoute == false)
@@ -576,19 +642,58 @@ public class BusProject {
 	
 	public static void getMatchingTrips(String findArrivalTime)
 	{
+		
+		String tempTime = findArrivalTime; // fixing some times example: if 09:34:56 change it to _9:34:56 ('_' would be ' ')
+		
+		//System.out.println("\nTime before correction :" + tempTime);
+		
+		String h = tempTime.substring(0,1);
+		if(h.equals("0"))
+		{
+			System.out.println("\nTime before correction :" + tempTime);
+			char space = ' ';
+			tempTime = space + tempTime.substring(1);	
+			System.out.println("Corrected time :" + tempTime);
+		}
+		//System.out.println("Corrected time :" + tempTime);
+		
 		// run through all of the stoptimes and select the trips where the arrival time is the same as findArrival time
 		// add the stoptime to the arraylist
-
+		for(int i=0; i<stopTimes.size(); i++)
+		{
+			if(stopTimes.get(i).getArrival_time().equals(tempTime))
+			{
+				addSortedTrips(i);
+			}
+		}
+		if(foundTrips.size() > 0)System.out.println("There were " + foundTrips.size() + " found.");
+		else if(foundTrips.size() == 0) System.out.println("There were no trips found.");
 	}
 	
-	public static void sortMatchingTrips()
+	public static void addSortedTrips(int whichStopTime)
 	{
-		// sort the arraylist of stop times by trip id
+		// add the stoptime in-order into foundTrips
+		boolean insertedTrip = false;
+		int newTripNumber = stopTimes.get(whichStopTime).getTrip_id();
+		for (int i = 0; i< foundTrips.size() && insertedTrip == false; i++)
+		{
+			if(foundTrips.get(i).getTrip_id() >= newTripNumber)
+			{
+				foundTrips.add(i,stopTimes.get(whichStopTime));	
+				insertedTrip = true;
+			}
+		}
+		if (insertedTrip==false) foundTrips.add(stopTimes.get(whichStopTime));
 	}
 	
 	public static void printMatchingTrips()
 	{
 		// run through the array list and print out the toString of each stop time in the already sorted list
+		System.out.println("\nThe trips matching the search are: ");
+		for(int i = 0; i < foundTrips.size(); i++)
+		{
+			System.out.println(foundTrips.get(i).toString());
+		}
 	}
 	
 }
