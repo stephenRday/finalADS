@@ -10,8 +10,8 @@ public class StopTime {
 	//trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled
 	
 	int trip_id;
-	LocalTime arrival_time;
-	LocalTime departure_time;
+	String arrival_time;
+	String departure_time;
 	int stop_id;
 	int stop_sequence;
 	int pickup_type;
@@ -23,17 +23,9 @@ public StopTime(String input) {
 		String[] stopTimesArray = input.split(",");
 		this.trip_id = Integer.parseInt(stopTimesArray[0]);	
 		
-		String timeCorrectFormat = stopTimesArray[1].replace(" ", "0");
-		//System.out.println(timeCorrectFormat);
-		Time arrTimeForm = Time.valueOf(timeCorrectFormat);
-		//System.out.println(arrTimeForm);
-		this.arrival_time = arrTimeForm.toLocalTime();
+		this.arrival_time = stopTimesArray[1];
 		
-		timeCorrectFormat = stopTimesArray[2].replace(" ", "0");
-		//System.out.println(timeCorrectFormat);
-		Time leaTimeForm = Time.valueOf(timeCorrectFormat);
-		//System.out.println(leaTimeForm);
-		this.departure_time = leaTimeForm.toLocalTime();
+		this.departure_time  = stopTimesArray[2];
 		
 		this.stop_id = Integer.parseInt(stopTimesArray[3]);
 		this.stop_sequence = Integer.parseInt(stopTimesArray[4]);
@@ -51,10 +43,10 @@ public StopTime(String input) {
 	public int getTrip_id() {
 		return trip_id;
 	}
-	public LocalTime getArrival_time() {
+	public String getArrival_time() {
 		return arrival_time;
 	}
-	public LocalTime getDeparture_time() {
+	public String getDeparture_time() {
 		return departure_time;
 	}
 	public int getStop_id() {

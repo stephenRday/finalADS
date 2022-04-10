@@ -12,6 +12,8 @@ public class BusProject {
 	static ArrayList<Stop> stops = new ArrayList<Stop>();
 	static ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 	static ArrayList<StopTime> stopTimes = new ArrayList<StopTime>();
+	static TernarySearchTree TST = new TernarySearchTree();
+	static ArrayList<StopTime> foundTrips = new ArrayList<StopTime>();
 	
 	
 
@@ -35,12 +37,22 @@ public class BusProject {
 		
 		if(processTransfers() == false)
 		{
-			System.out.println("Error when processing transfer1s");
+			System.out.println("Error when processing transfers");
 			exit = true;
 		}	
 		
 		System.out.println("The max number of connected stops is " + countMaxConnections());	
-		showNames(100);
+		showNames(2);
+
+		
+		// Read in the TST
+		
+		if(addStopsToTST() == false)
+		{
+			System.out.println("Error when populating tree");
+			exit = true;
+		}	
+		
 		
 		while(exit == false)
 		{
@@ -72,10 +84,56 @@ public class BusProject {
 				}
 				else if (option == 2)
 				{
+					if (input.hasNextLine()) input.nextLine();
+					
+					String startingText = "";
+					
+					while (!startingText.equals("exit"))
+					{
+					
+						System.out.print("Enter the text to search for at the start of the bus stop name (or exit to return): ");
+						startingText = input.nextLine();
+						
+						if (startingText.length() == 0)
+						{
+							System.out.println("Please enter a starting string to search for or type exit to return to the main menu");
+							
+						}
+						else if (startingText.equals("exit"))
+						{
+							System.out.println("Returning to main menu.");
+						}
+						else
+						{
+							System.out.println("Trying to find stops which start with " + startingText);
+						
+							// test the TST etc
+							ArrayList<String> matchingStopList = TST.getMatchingStops(startingText);
+							if (matchingStopList.size() == 0) System.out.println("Sorry - did not find any stops which matched " + startingText + "\n\n");
+							else
+							{
+								System.out.println("Found " + matchingStopList.size() + " stops that matched " + startingText);
+								for(int i = 0; i<matchingStopList.size();i++)
+								{
+									System.out.println("" + (i+1) + " stop found is: "+ matchingStopList.get(i));
+								}
+								System.out.println("\n");
+							}
+						}
+						
+					}
 					
 				}
 				else if (option == 3)
 				{
+					// ask the user for a time
+					// check if it is valid and not over 23:59:59
+					// tell user searching for trips with particular time
+					// restart the found trips arraylist as empty
+					ArrayList<StopTime> foundTrips = new ArrayList<StopTime>();
+					// call getmatching
+					// call sort
+					// call print
 					
 				}
 				else if (option == 4)
@@ -283,6 +341,32 @@ public class BusProject {
 			
 		}
 
+	
+	public static boolean addStopsToTST()
+	{
+		// go through all of the stops and add the fixed name to the TST
+		try
+		{
+			// stops is an arraylist
+			// TST is the tree and TST.insert(String) inserts a name
+					
+			for(int i=0; i<stops.size();i++)
+			{
+				TST.insert(stops.get(i).getFixedStopName());
+			}	
+			
+			System.out.println("Added " + TST.countStopsNamed() + " to the tree");
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error on populating Tree\n");
+//			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}
+	
 	public static int countMaxConnections() {
 		
 		int countMax = 0;
@@ -487,11 +571,24 @@ public class BusProject {
 	public static void showNames(int howMany)
 	{
 		for (int i = 0; i< stops.size() && i <howMany; i++)
-			System.out.println(stops.get(i).getStop_id() + ":" + stops.get(i).getStop_name() + " which then is fixed to :: " + stops.get(i).getFixedStopName());
-		
-		
+			System.out.println(stops.get(i).getStop_id() + ":" + stops.get(i).getStop_name() + " which then is fixed to :" + stops.get(i).getFixedStopName());
 	}
 	
+	public static void getMatchingTrips(String findArrivalTime)
+	{
+		// run through all of the stoptimes and select the trips where the arrival time is the same as findArrival time
+		// add the stoptime to the arraylist
+
+	}
 	
+	public static void sortMatchingTrips()
+	{
+		// sort the arraylist of stop times by trip id
+	}
+	
+	public static void printMatchingTrips()
+	{
+		// run through the array list and print out the toString of each stop time in the already sorted list
+	}
 	
 }

@@ -71,7 +71,16 @@ public class Stop {
 	public String getFixedStopName()
 	{
 		String newName = stop_name;
+		if (newName.startsWith("flagstop ")) newName = (newName.substring(9,newName.length()) + " flagstop");
+		if (newName.startsWith("FLAGSTOP ")) newName = (newName.substring(9,newName.length()) + " FLAGSTOP");
 		if (newName.startsWith("wb ")) newName = (newName.substring(3,newName.length()) + " wb");
+		if (newName.startsWith("WB ")) newName = (newName.substring(3,newName.length()) + " WB");
+		if (newName.startsWith("nb ")) newName = (newName.substring(3,newName.length()) + " nb");
+		if (newName.startsWith("NB ")) newName = (newName.substring(3,newName.length()) + " NB");
+		if (newName.startsWith("sb ")) newName = (newName.substring(3,newName.length()) + " sb");
+		if (newName.startsWith("SB ")) newName = (newName.substring(3,newName.length()) + " SB");
+		if (newName.startsWith("eb ")) newName = (newName.substring(3,newName.length()) + " eb");
+		if (newName.startsWith("EB ")) newName = (newName.substring(3,newName.length()) + " EB");
 		
 		
 		return newName;
